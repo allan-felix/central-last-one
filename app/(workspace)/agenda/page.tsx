@@ -1,0 +1,1 @@
+import AgendaClient from "@/components/agenda/AgendaClient";import{context}from"@/lib/modules/server";export default async function Page(){const{supabase,user}=await context();const{data}=await supabase.from("meetings").select("*,clients(name)").eq("owner_id",user.id).order("scheduled_at");return <AgendaClient initialMeetings={data||[]}/>}

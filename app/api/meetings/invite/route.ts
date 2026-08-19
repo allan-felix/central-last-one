@@ -1,0 +1,2 @@
+import{NextResponse}from"next/server";import{createClient}from"@/lib/supabase/server";import{sendMeetingEmail}from"@/lib/meetings/email";
+export async function POST(request:Request){const db=await createClient();const{data:{user}}=await db.auth.getUser();if(!user)return NextResponse.json({sent:false},{status:401});const{meetingId}=await request.json();const{data}=await db.from("meetings").select("*,clients(name)").eq("id",meetingId).single();if(!data)return NextResponse.json({sent:false},{status:404});return NextResponse.json({sent:await sendMeetingEmail(data,"invite")})}
